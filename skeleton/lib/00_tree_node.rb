@@ -49,7 +49,7 @@ class PolyTreeNode
         queue = [self]
 
         while !queue.empty? do 
-            current = queue.shift
+            current = queue.shiftg
             if current.value == target
                 return current
             else
