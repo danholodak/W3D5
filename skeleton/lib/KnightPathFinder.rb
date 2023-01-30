@@ -1,7 +1,10 @@
 require_relative "00_tree_node"
+
+require "byebug"
+
 class KPFinder
     
-    attr_reader :row, :col, :possible_moves, :accounted_move
+    attr_reader :row, :col, :possible_moves, :accounted_move, :root_node
     def initialize(pos)
         @row, @col = pos
         @possible_moves = []
@@ -34,7 +37,11 @@ class KPFinder
     # end
 
     def build_move_tree
-        self.build_possible_moves
+        self.build_possible_moves.each do |move|
+            move.parent = @root_node
+            @root_node.children << move
+        end
+
         # queue = @possible_moves
         while !@possible_moves.empty? do
             current = @possible_moves.shift
@@ -60,6 +67,34 @@ class KPFinder
 
     end
 
+    def find_path(end_pos)
+
+        found_node = @root_node.dfs(end_pos)
+        
+        return KPFinder.trace_path_back(@root_node.value,found_node)
+        
+
+    end
+
+
+    def self.trace_path_back(start_pos, node)
+
+        path = []
+
+        path << node.value
+
+        current_node = node
+        # debugger
+        while path[0] != start_pos
+            # debugger
+            path.unshift(current_node.parent.value)
+            current_node = current_node.parent
+        end
+
+        return path
+
+
+    end
         
 
 end
